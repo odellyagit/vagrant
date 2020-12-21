@@ -1,0 +1,34 @@
+serveur1
+
+[web]
+serveur2 ma_variable="hôte serveur2" ma_variable2=63
+serveur3
+
+[web:vars]
+ma_variable="groupe web"
+ma_variable2=36
+
+[bdd]
+serveur4
+serveur5
+
+[paris]
+serveur3
+
+[paris:vars]
+ma_variable="groupe paris"
+
+[nantes]
+serveur2
+serveur4
+
+[prod:children]
+web
+bdd
+
+[prod:vars]
+ma_variable="groupe parent prod"
+
+[all:vars]
+ma_variable=défaut
+ma_variable2=défaut2

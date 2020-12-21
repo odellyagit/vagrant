@@ -1,0 +1,36 @@
+- name: arrêt de serveur2 pour tests
+  hosts: serveur2
+  gather_facts: false
+  tasks:
+    - name: arrêter l'hôte
+      become: true
+      command: systemctl poweroff
+    - name: attendre l'arret de l'hôte
+      connection: local
+      command: ping {{inventory_hostname}} -w 5
+
+- name: client apache présent sur tous les hôtes du groupe web
+  hosts: web
+  gather_facts: false
+  tasks:
+    - name: vérifier que la dernière version d'apache est installée
+      become: true
+      yum:
+        name: httpd 
+        state: latest
+
+    - name: vérifier que le fichier /tmp/apacheIsInstalled.flag existe
+      copy:
+        content: ''
+        dest: /tmp/apacheIsInstalled.flag
+
+- name: vérification d'un fichier dans le play suivant
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: vérifier que le fichier /tmp/ansibleWasHere.flag existe
+      copy:
+        content: ''
+        dest: /tmp/ansibleWasHere.flag
+
+

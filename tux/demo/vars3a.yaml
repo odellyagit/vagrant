@@ -1,0 +1,12 @@
+---
+- name: affiche les variables dépendant de l'hôte traité
+  hosts:  serveur5
+  gather_facts: no
+  vars:
+    message: "{{hostvars[inventory_hostname]}}"
+  # message: "{{hostvars['serveur5']}}"
+
+  tasks:                                       
+    - debug:
+        var: message
+

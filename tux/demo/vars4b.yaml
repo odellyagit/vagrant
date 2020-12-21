@@ -1,0 +1,20 @@
+---
+- name: vérifie que le fichier d'état existe localement avec la bonne entête
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: vérifie que le fichier existe et y écrit l'entete si elle n'y est pas
+      lineinfile:
+        path: stats2.csv
+        line: host;ip;mac;disk;mem
+        create: yes
+
+- name: écrit localement l'état des hôtes gérés
+  hosts: all
+  tasks:  
+    - name: écrit l'état de l'hôte
+      connection: local
+      lineinfile:
+        path: stats2.csv
+        regexp: ^{{inventory_hostname}};
+        line: "{{ inventory_hostname }};{{ ansible_facts.default_ipv4.address }};{{ ansible_facts.default_ipv4.macaddress }};{{ ansible_facts.devices.sda.size }};{{ ansible_facts.memtotal_mb }} MB"

@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    ma_variable:
+      - 111
+      - chaîne de caractères
+      - cle1: a
+        cle2:
+          souscle1: 1
+  tasks:
+    - debug:
+        msg: "{{ma_variable}} plus du texte"

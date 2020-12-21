@@ -1,0 +1,11 @@
+---
+- name: collecte toutes les variables d'hôte
+  hosts: all
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: vérifie la mise à jour du fichier local des états hôtes
+      template:
+        src: modeles/stats3.csv.j2     
+        dest: stats3.csv

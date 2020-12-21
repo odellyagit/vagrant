@@ -1,0 +1,7 @@
+---
+- name: affiche les variables dépendant de l'hôte traité
+  hosts: all
+  tasks:                                       
+    - debug:
+        var: ansible_facts
+

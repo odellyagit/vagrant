@@ -1,0 +1,32 @@
+- name: vérifier epel présent sur serveur2
+  hosts: serveur2
+  gather_facts: false
+  tasks:
+    - name: vérifier que le depot epel est configuré
+      become: true
+      yum:
+        name: epel-release
+        state: latest
+
+- name: client openvpn présent sur tous les hôtes de nantes
+  hosts: nantes
+  gather_facts: false
+  tasks:
+    - name: vérifier que la dernière version d'openvpn est installée
+      become: true
+      yum:
+        name: openvpn 
+        state: latest
+
+    - name: vérifier que le fichier /tmp/openvpnIsInstalled.flag existe si openvpn a été installé
+      copy:
+        content: ''
+        dest: /tmp/openvpnIsInstalled.flag
+
+- name : vérifier que le fichier /tmp/ansibleWasHere.flag existe sur tous les hôtes
+  hosts: all
+  gather_facts: false
+  tasks:
+    - copy:
+        content: ''
+        dest: /tmp/ansibleWasHere.flag

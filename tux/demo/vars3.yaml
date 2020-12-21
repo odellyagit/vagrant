@@ -1,0 +1,14 @@
+---
+- name: affiche les variables ne dépendant pas de l'hôte traité
+  hosts: localhost
+  gather_facts: no
+  vars: 
+    message:
+      ansible_version: "{{ansible_version}}"
+      ansible_play_name: "{{ansible_play_name}}"
+      groups: "{{groups}}"
+      hostvars: "{{hostvars}}"
+
+  tasks:
+    - debug:
+        var: message

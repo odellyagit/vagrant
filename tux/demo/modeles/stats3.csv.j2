@@ -1,0 +1,5 @@
+host;ip;mac;disk;mem
+{% for host in groups['all']|sort %}
+{% set f = hostvars[host].ansible_facts %}
+{{ host }};{{ f.default_ipv4.address }};{{ f.default_ipv4.macaddress }};{{ f.devices.sda.size }};{{ f.memtotal_mb }} MB
+{% endfor %}

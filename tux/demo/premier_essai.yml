@@ -1,0 +1,31 @@
+- name: mon premier play
+
+  hosts: 
+    - web
+    - serveur1
+    - 10.88.0.1
+  
+  become: true
+  
+  tasks:
+    - name: vérifier apache à la dernière version
+      yum:
+        name: httpd
+        state: latest
+  
+    - name: vérifier que le fichier de config apache est présent
+      template:
+        src: /srv/httpd.j2
+        dest: /etc/httpd.conf
+    
+    - name: vérifier qu'apache est actif
+      service:
+        name: httpd
+        state: started
+      register: variable_de_registre
+    
+    - name: afficher le résultat
+      become: false
+      debug:
+        var: variable_de_registre 
+

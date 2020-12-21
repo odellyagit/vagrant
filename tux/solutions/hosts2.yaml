@@ -1,0 +1,16 @@
+---
+- name: un fichier {{fn}} existe sur les membres du groupe web
+  hosts: all
+  become: yes
+  vars:
+    fn: /tmp/hosts
+  
+  tasks:
+    - name: le fichier {{fn}} est à jour
+      template:
+        src: hosts.j2
+        dest: "{{fn}}"
+        owner: root
+        group: root
+        mode: 0
+      when: inventory_hostname in groups.web  

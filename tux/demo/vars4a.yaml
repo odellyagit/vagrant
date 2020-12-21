@@ -1,0 +1,30 @@
+---
+- name: prépare le répertoire local de collecte
+  hosts: localhost 
+  gather_facts: no
+  tasks:
+    - name: le répertoire temporaire des états, "{{dir}}", existe
+      file:
+        path: "{{dir}}"
+        state: directory
+
+    - name: le fichier pour les entêtes est présent
+      copy:
+        content: "host;ip;mac;disk;mem\n"
+        dest: "{{dir}}/1_entete"
+ 
+- name: les fichiers d'état des hôtes gérés sont présents
+  hosts: all
+  tasks:  
+    - name: le fichier d'état de l'hôte a été créé localement
+      copy:
+        content: "{{ inventory_hostname }};{{ ansible_facts.default_ipv4.address }};{{ ansible_facts.default_ipv4.macaddress }};{{ ansible_facts.devices.sda.size }};{{ ansible_facts.memtotal_mb }} MB\n"
+        dest: "{{dir}}/2_{{inventory_hostname|upper}}"
+      connection: local
+
+- name: le fichier final, {{dir}}.csv, est présent
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: crée le fichier d'état final
+      shell: "cat {{dir}}/* > {{dir}}.csv"

@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    ma_variable: 111
+  tasks:
+    - debug:
+        var: ma_variable
+    - name: surcharge dans la tache
+      debug:
+        var: ma_variable
+      vars:
+        ma_variable: 222

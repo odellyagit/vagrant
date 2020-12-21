@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    ma_variable:
+      - 111
+      - chaîne de caractères
+      - cle1: a
+        cle2:
+          souscle1: 1
+    ma_cle: cle2
+
+  tasks:
+    - debug:
+        msg: |
+          {{ (ma_variable[2]['cle2']) ['souscle1'] }} + t1
+          {{ ma_variable[2]['cle2']['souscle1']    }} + t2
+          {{ ma_variable[2][ma_cle]['souscle1']    }} + t3
+          {{ ma_variable[2].cle2.souscle1          }} + t4
+

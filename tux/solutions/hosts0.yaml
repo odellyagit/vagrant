@@ -1,0 +1,21 @@
+---
+- name: un fichier {{fn}} existe sur chaque membre du groupe web
+  hosts: web
+  become: yes
+  vars:
+    fn: /tmp/hosts
+  
+  tasks:
+    - name: le fichier {{fn}} est à jour
+      template:
+        src: hosts.j2
+        dest: "{{fn}}"
+        owner: root
+        group: root
+        mode: 0
+  
+    - command: cat {{fn|quote}}
+      register: resu_hosts
+      changed_when: false
+    
+    - debug: msg={{resu_hosts.stdout_lines}} 

@@ -1,0 +1,59 @@
+---
+- name: site apache fonctionnel sur toutes les machines du goupe web
+  hosts: web
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: apache est installé
+      yum:
+        name: httpd
+        state: present
+
+    - name: le service apache démarre avec le serveur
+      service:
+        name: httpd
+        enabled: yes
+
+    - name: le répertoire du site existe
+      file:
+        path: /site
+        state: directory
+        mode: 0500
+        owner: apache
+        group: root
+        setype: httpd_sys_content_t
+
+    - name: l'index du site existe
+      copy:
+        dest: /site/index.html
+        content: site web sur {{inventory_hostname}}\n
+        mode: 0400
+        owner: apache
+        group: root
+        setype: httpd_sys_content_t
+
+    - name: la config d'apache est redirigée vers le site
+      copy:
+        dest: /etc/httpd/conf.d/site.conf
+        content: |
+          Alias /site /site/index.html
+          <Directory "/site">
+            AllowOverride None
+            Require all granted
+          </Directory>
+      register: maconfig
+
+    - name: service apache redémarré en cas de modif
+      service:
+        name: httpd
+        state: restarted
+      when: maconfig.changed
+
+- name: teste si les serveurs web répondent
+  hosts: web
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: teste si chaque serveur répond depuis l'extérieur
+      uri:
+        url: http://{{inventory_hostname}}/site
